@@ -1,37 +1,38 @@
+# tomcat-deploy.yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: loksai-eta-deploy
+  name: tomcat-deploy
   labels:
-    app: loksai-eta-deploy-lbl
+    app: tomcat-deploy
 spec:
   replicas: 3
-  selector:
-    matchLabels:
-      app: loksai-eta-app
   template:
     metadata:
       labels:
-        app: loksai-eta-app
+        app: tomcat-app
     spec:
       containers:
-      - name: loksai-eta-container
-        image: loksaieta/sa-wd-webapp
+      - name: tomcat-container
+        image: vasanthdocuser/vk-build:v1.0
         ports:
-        - containerPort: 8080
+        - containerPort: 80
+  selector:
+    matchLabels:
+      app: tomcat-app
 ---
+# nodeport-service.yaml
 apiVersion: v1
 kind: Service
 metadata:
-  name: loksai-eta-np-service
+  name: tomcat-np-service
   labels:
-    app: loksai-eta-app
+    app: tomcat-app-sr	
 spec:
   selector:
-    app: loksai-eta-deploy-lbl
+    app: tomcat-app
 
   type: NodePort
   ports:
-  - nodePort: 31028
-    port: 8080
+  - port: 8080
     targetPort: 8080
